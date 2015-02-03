@@ -11,6 +11,7 @@
 static CGFloat margin = 15;
 static NSString * const Command = @"command";
 static NSString * const Reference = @"reference";
+static CGFloat labelHeight = 45;
 
 @interface GRViewController ()
 
@@ -22,18 +23,43 @@ static NSString * const Reference = @"reference";
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    CGFloat topMagin = 20;
+    CGFloat top = 20;
     
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, topMagin, self.view.frame.size.width, self.view.frame.size.height)];
-    scrollView.contentSize = CGSizeMake(self.view.frame.size.width + 10, self.view.frame.size.height + 10);
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, top, self.view.frame.size.width, self.view.frame.size.height)];
+    //scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height + 300);
     [self.view addSubview:scrollView];
     
-    CGFloat x = CGRectGetMaxX(self.view.frame);
+    CGFloat labelWidth = self.view.frame.size.width - margin;
     
-    UILabel *gitReference = [[UILabel alloc] initWithFrame:CGRectMake(100, 64, x, 20)];
-    gitReference.text = @"Git Reference";
-    [scrollView addSubview:gitReference];
+   // int top = topMagin;
+    
+    top += labelHeight / 2;
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(margin, top, labelWidth, labelHeight)];
+    titleLabel.text = @"Git Reference";
+    [titleLabel setFont:[UIFont boldSystemFontOfSize:[UIFont systemFontSize]]];
+    [scrollView addSubview:titleLabel];
+    
+    top += labelHeight * 1.5;
                              
+    for (int i = 0; i < [self gitCommands].count; i++)
+    {
+        UILabel *labelCommand = [[UILabel alloc] initWithFrame:CGRectMake(margin, top, labelWidth, labelHeight)];
+        labelCommand.text = [self gitCommands][i][Command];
+        [scrollView addSubview:labelCommand];
+        
+        top += labelHeight / 2; // top = top + 20;
+        
+        UILabel *labelReference = [[UILabel alloc] initWithFrame:CGRectMake(margin, top, labelWidth, labelHeight)];
+        labelReference.text = [self gitCommands][i][Reference];
+        labelReference.numberOfLines = 0;
+        [scrollView addSubview:labelReference];
+        
+        top += labelHeight * 1.3;
+    }
+    
+    scrollView.contentSize = CGSizeMake(self.view.frame.size.width, top);
+
 }
 
 - (NSArray *)gitCommands {
